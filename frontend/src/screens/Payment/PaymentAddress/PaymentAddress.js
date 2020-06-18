@@ -53,16 +53,29 @@ export default function PaymentAddress({navigation}) {
         street_number,
         complemento,
       } = values;
+
       if (profile.cpf && profile.phone) {
-        navigation.navigate('PaymentCart', {
-          zipcode,
-          state,
-          street,
-          city,
-          neighborhood,
-          street_number,
-          complemento,
-        });
+        if (
+          initialValues.zipcode === zipcode ||
+          initialValues.state === state ||
+          initialValues.street === street ||
+          initialValues.city === city ||
+          initialValues.street_number === street_number ||
+          initialValues.neighborhood === neighborhood ||
+          initialValues.complemento === complemento
+        ) {
+          Alert.alert('Preencha os valores corretamente para prosseguir');
+        } else {
+          navigation.navigate('PaymentCart', {
+            zipcode,
+            state,
+            street,
+            city,
+            neighborhood,
+            street_number,
+            complemento,
+          });
+        }
       } else {
         Alert.alert('Antes de prosseguir é necessário completar o cadastro');
         navigation.navigate('CompleteRegister');
@@ -71,7 +84,7 @@ export default function PaymentAddress({navigation}) {
   };
 
   const onChangeCep = async (setValues, values, txt) => {
-    if (txt.length == 9) {
+    if (txt.length === 9) {
       setValues({...values, zipcode: txt});
       try {
         const {state, city, street, neighborhood} = await cep(txt);

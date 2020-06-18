@@ -1,4 +1,4 @@
-import {createAppContainer} from 'react-navigation';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import React, {useEffect} from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 import {createStackNavigator} from 'react-navigation-stack';
@@ -45,12 +45,23 @@ const RootStack = createDrawerNavigator(
       navigationOptions: () => ({drawerLabel: 'Completar registro'}),
     },
     Payment: {
-      screen: createStackNavigator({
-        CardList,
-        PaymentAddress,
-        PaymentCart,
-        CheckoutEasy,
-      }),
+      screen: createStackNavigator(
+        {
+          CardList,
+          PaymentAddress,
+          PaymentCart,
+          CheckoutEasy,
+        },
+        {
+          defaultNavigationOptions: {
+            headerTransparent: true,
+            headerTintColor: '#FFF',
+            headerLeftContainerStyle: {
+              marginLeft: 0,
+            },
+          },
+        },
+      ),
       navigationOptions: () => ({drawerLabel: 'Pagamento'}),
     },
     Logout: {
@@ -61,7 +72,7 @@ const RootStack = createDrawerNavigator(
   {
     initialRouteName: 'Home',
     headerMode: 'screen',
-    navigationOptions: ({navigation}) => ({
+    navigationOptions: ({navigation, previous}) => ({
       headerBackground: () => (
         <LinearGradient
           colors={[darken(0.2, appColors.primary), appColors.primary]}
@@ -70,19 +81,33 @@ const RootStack = createDrawerNavigator(
       ),
       headerTintColor: appColors.white,
       title: 'Dev Doido',
+      headerTitleAlign: 'center',
       headerLeft: () => (
-        <Icon
-          style={{padding: 10, color: appColors.white}}
-          name="three-bars"
-          size={30}
-          color={appColors.black}
-          onPress={() => {
-            navigation.toggleDrawer();
-          }}
-        />
+        <>
+          <Icon
+            style={{padding: 10, color: appColors.white}}
+            name="three-bars"
+            size={30}
+            color={appColors.black}
+            onPress={() => {
+              navigation.toggleDrawer();
+            }}
+          />
+          {previous ? (
+            <Icon
+              style={{padding: 10, color: appColors.white}}
+              name="arrow-left"
+              size={30}
+              color={appColors.black}
+              onPress={() => {
+                navigation.goBack();
+              }}
+            />
+          ) : null}
+        </>
       ),
       headerTitleStyle: {
-        paddingLeft: appMetrics.DEVICE_WIDTH / 5.5,
+        //  paddingLeft: appMetrics.DEVICE_WIDTH / 5.5,
         color: appColors.white,
       },
     }),
@@ -90,5 +115,17 @@ const RootStack = createDrawerNavigator(
 );
 
 export default createAppContainer(
-  createStackNavigator({RootStack: {screen: RootStack}}),
+  createSwitchNavigator(
+    {
+      App: createStackNavigator(
+        {RootStack: {screen: RootStack}},
+        {
+          defaultNavigationOptions: {
+            headerTintColor: '#FFF',
+          },
+        },
+      ),
+    },
+    {initialRouteName: 'App'},
+  ),
 );
