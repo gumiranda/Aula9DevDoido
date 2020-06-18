@@ -44,42 +44,55 @@ export default function PaymentAddress({navigation}) {
 
   const onSubmit = async (values, isValid) => {
     if (isValid) {
-      const {
-        zipcode,
-        state,
-        street,
-        city,
-        neighborhood,
-        street_number,
-        complemento,
-      } = values;
-
-      if (profile.cpf && profile.phone) {
-        if (
-          initialValues.zipcode === zipcode ||
-          initialValues.state === state ||
-          initialValues.street === street ||
-          initialValues.city === city ||
-          initialValues.street_number === street_number ||
-          initialValues.neighborhood === neighborhood ||
-          initialValues.complemento === complemento
-        ) {
-          Alert.alert('Preencha os valores corretamente para prosseguir');
-        } else {
-          navigation.navigate('PaymentCart', {
-            zipcode,
-            state,
-            street,
-            city,
-            neighborhood,
-            street_number,
-            complemento,
-          });
-        }
+      if (new Date(profile.payDay).getTime() > new Date().getTime()) {
+        Alert.alert('Erro', 'Sua assinatura já está paga');
+        navigation.navigate('Home');
       } else {
-        Alert.alert('Antes de prosseguir é necessário completar o cadastro');
-        navigation.navigate('CompleteRegister');
+        const {
+          zipcode,
+          state,
+          street,
+          city,
+          neighborhood,
+          street_number,
+          complemento,
+        } = values;
+
+        if (profile.cpf && profile.phone) {
+          if (
+            initialValues.zipcode === zipcode ||
+            initialValues.state === state ||
+            initialValues.street === street ||
+            initialValues.city === city ||
+            initialValues.street_number === street_number ||
+            initialValues.neighborhood === neighborhood ||
+            initialValues.complemento === complemento
+          ) {
+            Alert.alert(
+              'Erro',
+              'Preencha os valores corretamente para prosseguir',
+            );
+          } else {
+            navigation.navigate('PaymentCart', {
+              zipcode,
+              state,
+              street,
+              city,
+              neighborhood,
+              street_number,
+              complemento,
+            });
+          }
+        } else {
+          Alert.alert(
+            'Erro',
+            'Antes de prosseguir é necessário completar o cadastro',
+          );
+          navigation.navigate('CompleteRegister');
+        }
       }
+    } else {
+      Alert.alert('Erro', 'Preencha os valores corretamente para prosseguir');
     }
   };
 
@@ -90,7 +103,7 @@ export default function PaymentAddress({navigation}) {
         const {state, city, street, neighborhood} = await cep(txt);
         setValues({...values, state, city, street, neighborhood, zipcode: txt});
       } catch (e) {
-        Alert.alert('CEP não foi encontrado');
+        Alert.alert('Erro', 'CEP não foi encontrado');
       }
     } else {
       setValues({...values, zipcode: txt});

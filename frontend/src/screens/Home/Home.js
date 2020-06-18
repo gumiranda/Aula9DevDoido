@@ -4,7 +4,6 @@ import {View} from 'react-native';
 import {Title} from './styles';
 import Background from '../../components/Background/Background';
 import {appColors} from '../../utils/appColors';
-import ShadowButton from '../../components/ShadowButton/ShadowButton';
 
 export default function Home({navigation}) {
   const profile = useSelector(state => state.user.profile);
@@ -36,11 +35,6 @@ export default function Home({navigation}) {
   return (
     <Background>
       <Title>HomePage DevDoido</Title>
-      <View style={{flex: 1, alignItems: 'center'}}>
-        <ShadowButton textColor={appColors.white} color={appColors.primary}>
-          Confirmar Pagamento
-        </ShadowButton>
-      </View>
     </Background>
   );
 }

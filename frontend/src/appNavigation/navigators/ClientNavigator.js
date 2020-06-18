@@ -1,4 +1,4 @@
-import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import {createAppContainer} from 'react-navigation';
 import React, {useEffect} from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 import {createStackNavigator} from 'react-navigation-stack';
@@ -6,7 +6,6 @@ import {darken} from 'polished';
 import {useDispatch} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import {createDrawerNavigator} from 'react-navigation-drawer';
-import appMetrics from '../../utils/appMetrics';
 import {signOut} from '../../appStore/appModules/auth/actions';
 import Profile from '../../screens/Profile/Profile';
 import Home from '../../screens/Home/Home';
@@ -17,6 +16,7 @@ import CardList from '../../screens/Payment/CardList/CardList';
 import CompleteRegister from '../../screens/Payment/CompleteRegister/CompleteRegister';
 import {appColors} from '../../utils/appColors';
 import Background from '../../components/Background/Background';
+import appMetrics from '../../utils/appMetrics';
 
 function Logout() {
   const dispatch = useDispatch();
@@ -36,12 +36,25 @@ const RootStack = createDrawerNavigator(
       screen: Profile,
       navigationOptions: () => ({drawerLabel: 'Meu perfil'}),
     },
-    CompleteRegister: {
-      screen: createStackNavigator({
-        CompleteRegister,
-        PaymentAddress,
-        PaymentCart,
-      }),
+    CompleteReg: {
+      screen: createStackNavigator(
+        {
+          CompleteRegister,
+          RegPaymentAddress: {screen: PaymentAddress},
+          RegPaymentCart: {screen: PaymentCart},
+        },
+        {
+          initialRouteName: 'CompleteRegister',
+          defaultNavigationOptions: {
+            headerTransparent: true,
+            headerBackTitleVisible: true,
+            headerTintColor: '#FFF',
+            headerLeftContainerStyle: {
+              marginLeft: 0,
+            },
+          },
+        },
+      ),
       navigationOptions: () => ({drawerLabel: 'Completar registro'}),
     },
     Payment: {
@@ -53,8 +66,10 @@ const RootStack = createDrawerNavigator(
           CheckoutEasy,
         },
         {
+          initialRouteName: 'CardList',
           defaultNavigationOptions: {
             headerTransparent: true,
+            headerBackTitleVisible: true,
             headerTintColor: '#FFF',
             headerLeftContainerStyle: {
               marginLeft: 0,
@@ -72,7 +87,7 @@ const RootStack = createDrawerNavigator(
   {
     initialRouteName: 'Home',
     headerMode: 'screen',
-    navigationOptions: ({navigation, previous}) => ({
+    navigationOptions: ({navigation}) => ({
       headerBackground: () => (
         <LinearGradient
           colors={[darken(0.2, appColors.primary), appColors.primary]}
@@ -81,7 +96,6 @@ const RootStack = createDrawerNavigator(
       ),
       headerTintColor: appColors.white,
       title: 'Dev Doido',
-      headerTitleAlign: 'center',
       headerLeft: () => (
         <>
           <Icon
@@ -93,21 +107,10 @@ const RootStack = createDrawerNavigator(
               navigation.toggleDrawer();
             }}
           />
-          {previous ? (
-            <Icon
-              style={{padding: 10, color: appColors.white}}
-              name="arrow-left"
-              size={30}
-              color={appColors.black}
-              onPress={() => {
-                navigation.goBack();
-              }}
-            />
-          ) : null}
         </>
       ),
       headerTitleStyle: {
-        //  paddingLeft: appMetrics.DEVICE_WIDTH / 5.5,
+        paddingLeft: appMetrics.DEVICE_WIDTH / 5.5,
         color: appColors.white,
       },
     }),
@@ -115,17 +118,5 @@ const RootStack = createDrawerNavigator(
 );
 
 export default createAppContainer(
-  createSwitchNavigator(
-    {
-      App: createStackNavigator(
-        {RootStack: {screen: RootStack}},
-        {
-          defaultNavigationOptions: {
-            headerTintColor: '#FFF',
-          },
-        },
-      ),
-    },
-    {initialRouteName: 'App'},
-  ),
+  createStackNavigator({RootStack: {screen: RootStack}}),
 );
