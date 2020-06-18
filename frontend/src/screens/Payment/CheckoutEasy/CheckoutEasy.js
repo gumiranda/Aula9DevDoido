@@ -27,7 +27,7 @@ export default function CheckoutEasy({navigation}) {
           );
           setLoading(false);
           setCount(prev => prev + 1);
-          navigation.navigate('Home');
+          navigation.navigate('CardList', {goToHome: true});
         }
       }
     } catch (e) {
