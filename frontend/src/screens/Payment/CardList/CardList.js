@@ -31,10 +31,9 @@ export default function CardList({navigation}) {
     dispatch(getRequest());
   }, [dispatch]);
   useEffect(() => {
-    // if (navigation.getParam('goToAddress')) {
-    //   navigation.navigate('PaymentAddress');
-    // } else
-    if (cards.length > 0) {
+    if (navigation.getParam('goToHome')) {
+      navigation.navigate('Home');
+    } else if (cards.length > 0) {
       navigation.navigate('CardList');
       setLoading(false);
     } else if (profile.cpf && profile.phone) {

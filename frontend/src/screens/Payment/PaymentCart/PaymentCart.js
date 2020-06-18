@@ -70,7 +70,7 @@ export default function PaymentCart({navigation}) {
             );
             setCount(prev => prev + 1);
             setLoading(false);
-            navigation.navigate('Home');
+            navigation.navigate('CardList', {goToHome: true});
           }
         }
       } catch (e) {
