@@ -58,13 +58,18 @@ export default function CardList({navigation}) {
       {loading ? (
         <ActivityIndicator size="large" color={appColors.white} />
       ) : null}
-      <SubmitButton onPress={() => addCard()}>
+      <SubmitButton
+        textColor={appColors.white}
+        color={appColors.primary}
+        onPress={() => addCard()}>
         {cards && cards.length === 0
           ? 'Adicionar novo cartão'
-          : 'Adicionar outro cartão'}
+          : 'Pagar com outro cartão'}
       </SubmitButton>
       <CreditCardList onPress={onPress} cards={cards} />
-      <Title>Assinatura válida até {dateFormatted}</Title>
+      <Title style={{justifyContent: 'center'}}>
+        Assinatura válida até {dateFormatted}
+      </Title>
     </Background>
   );
 }

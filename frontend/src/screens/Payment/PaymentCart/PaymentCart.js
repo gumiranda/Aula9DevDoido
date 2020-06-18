@@ -73,7 +73,7 @@ export default function PaymentCart({navigation}) {
           );
           Alert.alert(
             'Pagamento feito com sucesso',
-            `Seu acesso à plataforma está válido até ${dateSignatureValid}`,
+            `Seu acesso à plataforma está liberado`,
           );
           navigation.navigate('Home');
         }
